@@ -7,15 +7,26 @@ namespace AppInsegura.Servicios
 {
     public class RedService
     {
-        // CORRECCIÓN 8.º ERROR (Defensa en profundidad 2): la clave ya no está escrita en
-        // el código, se lee de la variable de entorno GAME_API_KEY.
+        // ----------------------------------------------------------------------
+        // CORRECCIÓN 8.º ERROR – DEFENSA EN PROFUNDIDAD (2)
+        // Aquí se protege la clave del servidor (API key) con VARIAS capas.
+        // ANTES:   la clave estaba escrita en el código, viajaba por HTTP (sin
+        //          cifrar) dentro de la URL y además se imprimía por pantalla.
+        // PELIGRO: se podía robar mirando el código, espiando la red, o en los
+        //          registros e historiales donde se guardan las URLs.
+        //
+        // CAPA 1: la clave ya no está en el código; se lee de la variable de
+        //         entorno GAME_API_KEY (un valor guardado fuera del programa).
+        // ----------------------------------------------------------------------
         private static readonly string? ApiKey = Environment.GetEnvironmentVariable("GAME_API_KEY");
 
-        // CORRECCIÓN 8.º ERROR (Defensa en profundidad 2): solo se permiten conexiones HTTPS.
+        // CAPA 2: solo HTTPS (conexión cifrada). Antes era http://, que viaja en
+        //         texto claro y cualquiera en la red podía leer la clave.
         private const string UrlServidor = "https://api.miapp-insegura.local/puntuaciones";
 
         public void EnviarPuntuacion(string nombreUsuario, int puntuacion)
         {
+            // Si no hay clave configurada, no se envía nada.
             if (string.IsNullOrEmpty(ApiKey))
             {
                 Console.WriteLine("Falta configurar la variable de entorno GAME_API_KEY.");
@@ -35,15 +46,21 @@ namespace AppInsegura.Servicios
 
         private async Task EnviarPuntuacionAsync(string nombreUsuario, int puntuacion)
         {
+            // La URL ya NO lleva la clave: solo el usuario y los puntos.
             string url = $"{UrlServidor}?usuario={nombreUsuario}&puntos={puntuacion}";
+            // CAPA 2 (refuerzo): si por error la URL no empieza por https://,
+            //         se bloquea y no se envía nada.
             if (!url.StartsWith("https://"))
             {
                 throw new InvalidOperationException("Solo se permiten conexiones HTTPS.");
             }
 
             using var cliente = new HttpClient();
-            // CORRECCIÓN 8.º ERROR (Defensa en profundidad 2): la clave viaja en la
-            // cabecera Authorization, no en la URL, y no se imprime por pantalla.
+            // CAPA 3: la clave va en la cabecera Authorization ("Bearer <clave>"),
+            //         no en la URL. Las URLs se guardan en historiales y logs;
+            //         las cabeceras no.
+            // CAPA 4: la clave nunca se imprime por pantalla (antes se mostraba
+            //         la URL entera, con la clave dentro).
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey);
 
             HttpResponseMessage respuesta = await cliente.GetAsync(url);
