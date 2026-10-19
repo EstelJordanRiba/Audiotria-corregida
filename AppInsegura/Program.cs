@@ -77,8 +77,8 @@ namespace AppInsegura
                     //          ve el programador mientras depura (no sale por
                     //          pantalla al usuario).
                     // ----------------------------------------------------------
-                    Console.WriteLine("Ha ocurrido un error inesperado.");
-                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    Console.WriteLine("Ha ocurrido un error inesperado.");  // Solución del error 9
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());  // Solución del error 9
                 }
 
                 Console.WriteLine();
@@ -104,19 +104,19 @@ namespace AppInsegura
         // ----------------------------------------------------------------------
         private static void CargarUsuariosDeEjemplo()
         {
-#if DEBUG
-            string? claveAdmin = Environment.GetEnvironmentVariable("APP_ADMIN_PASSWORD");
-            string? claveAna = Environment.GetEnvironmentVariable("APP_ANA_PASSWORD");
+#if DEBUG  // Solución del error 4
+            string? claveAdmin = Environment.GetEnvironmentVariable("APP_ADMIN_PASSWORD");  // Solución del error 4
+            string? claveAna = Environment.GetEnvironmentVariable("APP_ANA_PASSWORD");  // Solución del error 4
 
-            if (!string.IsNullOrEmpty(claveAdmin))
+            if (!string.IsNullOrEmpty(claveAdmin))  // Solución del error 4
             {
-                auth.RegistrarConRol("admin", claveAdmin, "admin");
+                auth.RegistrarConRol("admin", claveAdmin, "admin");  // Solución del error 4
             }
-            if (!string.IsNullOrEmpty(claveAna))
+            if (!string.IsNullOrEmpty(claveAna))  // Solución del error 4
             {
-                auth.RegistrarConRol("ana", claveAna, "jugador");
+                auth.RegistrarConRol("ana", claveAna, "jugador");  // Solución del error 4
             }
-#endif
+#endif  // Solución del error 4
         }
 
         // ----------------------------------------------------------------------
@@ -134,9 +134,9 @@ namespace AppInsegura
         //          Esto se llama "DENEGAR POR DEFECTO": ante la duda, NO.
         // Se usa en: PanelAdministracion(), BuscarUsuario() y MostrarMenu().
         // ----------------------------------------------------------------------
-        private static bool EsAdmin()
+        private static bool EsAdmin()  // Solución del error 5
         {
-            return usuarioActual != null && usuarioActual.Rol == "admin";
+            return usuarioActual != null && usuarioActual.Rol == "admin";  // Solución del error 5
         }
 
         private static void MostrarMenu()
@@ -149,7 +149,7 @@ namespace AppInsegura
             Console.WriteLine("4. Ver mi perfil");
             // OJO: esconder la opción 5 del menú es solo comodidad, NO seguridad.
             // La protección de verdad está en PanelAdministracion() (1.er error).
-            if (EsAdmin())
+            if (EsAdmin())  // Solución del error 5
             {
                 Console.WriteLine("5. Panel de administración");
             }
@@ -167,7 +167,7 @@ namespace AppInsegura
 
             // Registrar() ya no deja elegir el rol: siempre crea "jugador"
             // (1.er error – ver AuthService.cs).
-            Usuario nuevo = auth.Registrar(nombre, contrasena);
+            Usuario nuevo = auth.Registrar(nombre, contrasena);  // Solución del error 1
             Console.WriteLine($"Usuario '{nuevo.Nombre}' registrado con rol '{nuevo.Rol}'.");
         }
 
@@ -198,10 +198,10 @@ namespace AppInsegura
             //          qué cuentas existen.
             // AHORA:   si no has iniciado sesión, no puedes buscar.
             // ------------------------------------------------------------------
-            if (usuarioActual == null)
+            if (usuarioActual == null)  // Solución del error 3
             {
-                Console.WriteLine("Primero debes iniciar sesión.");
-                return;
+                Console.WriteLine("Primero debes iniciar sesión.");  // Solución del error 3
+                return;  // Solución del error 3
             }
 
             Console.Write("Nombre a buscar: ");
@@ -219,9 +219,9 @@ namespace AppInsegura
             //          Un jugador normal solo ve el nombre.
             // ------------------------------------------------------------------
             Console.WriteLine(encontrado != null
-                ? (EsAdmin()
-                    ? $"Encontrado: {encontrado.Nombre} (rol: {encontrado.Rol})"
-                    : $"Encontrado: {encontrado.Nombre}")
+                ? (EsAdmin()  // Solución del error 3
+                    ? $"Encontrado: {encontrado.Nombre} (rol: {encontrado.Rol})"  // Solución del error 3
+                    : $"Encontrado: {encontrado.Nombre}")  // Solución del error 3
                 : "No se ha encontrado ningún usuario con ese nombre.");
         }
 
@@ -262,10 +262,10 @@ namespace AppInsegura
             // IDEA CLAVE: esconder un botón NO es proteger.
             // Ver también: Registrar() en AuthService.cs (1.er error).
             // ------------------------------------------------------------------
-            if (!EsAdmin())
+            if (!EsAdmin())  // Solución del error 1 y 5
             {
-                Console.WriteLine("Acceso denegado.");
-                return;
+                Console.WriteLine("Acceso denegado.");  // Solución del error 1 y 5
+                return;  // Solución del error 1 y 5
             }
 
             Console.WriteLine("=== PANEL DE ADMINISTRACIÓN ===");
