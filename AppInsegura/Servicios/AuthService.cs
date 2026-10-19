@@ -16,7 +16,7 @@ namespace AppInsegura.Servicios
             this.baseDatos = baseDatos;
         }
 
-        // CORRECCIÓN (Privilegio mínimo): el registro público ya no recibe el
+        // CORRECCIÓN 1.er ERROR (Privilegio mínimo): el registro público ya no recibe el
         // rol; solo crea cuentas con rol "jugador".
         public Usuario Registrar(string nombre, string contrasena)
         {
@@ -46,7 +46,7 @@ namespace AppInsegura.Servicios
                 return null;
             }
 
-            // CORRECCIÓN (No inventar criptografía): se recalcula el hash con la
+            // CORRECCIÓN 6.º ERROR (No inventar criptografía): se recalcula el hash con la
             // misma sal del usuario y se compara en tiempo constante.
             byte[] sal = Convert.FromBase64String(usuario.ContrasenaHash.Split(':')[0]);
             string hashIntento = CalcularHash(contrasena, sal);
@@ -57,7 +57,7 @@ namespace AppInsegura.Servicios
                 return null;
             }
 
-            // CORRECCIÓN (No inventar criptografía 2): en el usuario solo se
+            // CORRECCIÓN 7.º ERROR (No inventar criptografía 2): en el usuario solo se
             // guarda el hash SHA-256 del token, y el token no se muestra en el log.
             string token = GenerarTokenSesion();
             usuario.TokenSesion = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
@@ -69,7 +69,7 @@ namespace AppInsegura.Servicios
             return usuario;
         }
 
-        // CORRECCIÓN (No inventar criptografía): se sustituye MD5 por PBKDF2 con
+        // CORRECCIÓN 6.º ERROR (No inventar criptografía): se sustituye MD5 por PBKDF2 con
         // SHA-256, una sal aleatoria de 16 bytes por usuario y 600.000
         // iteraciones. Se guarda como "sal:hash" (en Base64).
         private string CalcularHash(string contrasena, byte[] sal)
@@ -78,14 +78,14 @@ namespace AppInsegura.Servicios
             return $"{Convert.ToBase64String(sal)}:{Convert.ToBase64String(hash)}";
         }
 
-        // CORRECCIÓN (No inventar criptografía 2): el token se genera con
+        // CORRECCIÓN 7.º ERROR (No inventar criptografía 2): el token se genera con
         // RandomNumberGenerator (32 bytes aleatorios) en lugar de Random.
         private string GenerarTokenSesion()
         {
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
         }
 
-        // CORRECCIÓN (No inventar criptografía 2): TokenSesion ahora contiene el
+        // CORRECCIÓN 7.º ERROR (No inventar criptografía 2): TokenSesion ahora contiene el
         // hash del token, así que el token real ya no se guarda en texto plano.
         private void GuardarSesionEnDisco(Usuario usuario)
         {

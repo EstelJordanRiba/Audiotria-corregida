@@ -7,11 +7,11 @@ namespace AppInsegura.Servicios
 {
     public class RedService
     {
-        // CORRECCIÓN (Defensa en profundidad 2): la clave ya no está escrita en
+        // CORRECCIÓN 8.º ERROR (Defensa en profundidad 2): la clave ya no está escrita en
         // el código, se lee de la variable de entorno GAME_API_KEY.
         private static readonly string? ApiKey = Environment.GetEnvironmentVariable("GAME_API_KEY");
 
-        // CORRECCIÓN (Defensa en profundidad 2): solo se permiten conexiones HTTPS.
+        // CORRECCIÓN 8.º ERROR (Defensa en profundidad 2): solo se permiten conexiones HTTPS.
         private const string UrlServidor = "https://api.miapp-insegura.local/puntuaciones";
 
         public void EnviarPuntuacion(string nombreUsuario, int puntuacion)
@@ -42,7 +42,7 @@ namespace AppInsegura.Servicios
             }
 
             using var cliente = new HttpClient();
-            // CORRECCIÓN (Defensa en profundidad 2): la clave viaja en la
+            // CORRECCIÓN 8.º ERROR (Defensa en profundidad 2): la clave viaja en la
             // cabecera Authorization, no en la URL, y no se imprime por pantalla.
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey);
 
