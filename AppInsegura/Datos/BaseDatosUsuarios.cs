@@ -1,7 +1,7 @@
    using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;  // Solución del error 2
 using AppInsegura.Modelos;
 
 namespace AppInsegura.Datos
@@ -49,13 +49,13 @@ namespace AppInsegura.Datos
         public Usuario? BuscarPorNombre(string nombreBuscado)
         {
             // Si no cumple la lista blanca → se rechaza y no se busca nada.
-            if (!Regex.IsMatch(nombreBuscado, "^[A-Za-z0-9_]{3,20}$"))
+            if (!Regex.IsMatch(nombreBuscado, "^[A-Za-z0-9_]{3,20}$"))  // Solución del error 2
             {
-                return null;
+                return null;  // Solución del error 2
             }
 
             // Comparación exacta: el texto es solo un dato, no una orden.
-            return BuscarExacto(nombreBuscado);
+            return BuscarExacto(nombreBuscado);  // Solución del error 2
         }
     }
 }
