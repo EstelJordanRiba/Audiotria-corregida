@@ -16,7 +16,7 @@ namespace AppInsegura
             CargarUsuariosDeEjemplo();
 
             Console.WriteLine("=== Gestor de Usuarios y Partidas ===");
-            // CORRECCIÓN (Defensa en profundidad): se elimina el aviso que
+            // CORRECCIÓN 4.º ERROR (Defensa en profundidad): se elimina el aviso que
             // mostraba al arrancar los usuarios de prueba y sus contraseñas.
             Console.WriteLine();
 
@@ -58,7 +58,7 @@ namespace AppInsegura
                 }
                 catch (Exception ex)
                 {
-                    // CORRECCIÓN (Fallar de forma segura 2): el usuario solo ve un
+                    // CORRECCIÓN 9.º ERROR (Fallar de forma segura 2): el usuario solo ve un
                     // mensaje genérico; el detalle del error (ex.ToString()) se
                     // envía únicamente a la traza de depuración.
                     Console.WriteLine("Ha ocurrido un error inesperado.");
@@ -71,7 +71,7 @@ namespace AppInsegura
             Console.WriteLine("Hasta luego.");
         }
 
-        // CORRECCIÓN (Defensa en profundidad): las cuentas de prueba solo se
+        // CORRECCIÓN 4.º ERROR (Defensa en profundidad): las cuentas de prueba solo se
         // crean en la versión de depuración (#if DEBUG) y sus contraseñas se
         // leen de variables de entorno, no del código.
         private static void CargarUsuariosDeEjemplo()
@@ -91,7 +91,7 @@ namespace AppInsegura
 #endif
         }
 
-        // CORRECCIÓN (Fallar de forma segura): la comprobación de rol se
+        // CORRECCIÓN 5.º ERROR (Fallar de forma segura): la comprobación de rol se
         // centraliza aquí. Si no hay sesión o no se puede confirmar que el rol
         // es "admin", se deniega (denegar por defecto).
         private static bool EsAdmin()
@@ -147,7 +147,7 @@ namespace AppInsegura
 
         private static void BuscarUsuario()
         {
-            // CORRECCIÓN (No confiar en la entrada 2): para buscar usuarios hay
+            // CORRECCIÓN 3.er ERROR (No confiar en la entrada 2): para buscar usuarios hay
             // que haber iniciado sesión.
             if (usuarioActual == null)
             {
@@ -159,7 +159,7 @@ namespace AppInsegura
             string nombre = Console.ReadLine() ?? "";
 
             Usuario? encontrado = baseDatos.BuscarPorNombre(nombre);
-            // CORRECCIÓN (No confiar en la entrada 2): el rol del usuario
+            // CORRECCIÓN 3.er ERROR (No confiar en la entrada 2): el rol del usuario
             // encontrado solo se muestra si quien busca es administrador.
             Console.WriteLine(encontrado != null
                 ? (EsAdmin()
@@ -178,13 +178,13 @@ namespace AppInsegura
 
             Console.WriteLine($"Nombre: {usuarioActual.Nombre}");
             Console.WriteLine($"Rol: {usuarioActual.Rol}");
-            // CORRECCIÓN (No inventar criptografía 2): el token de sesión ya no
+            // CORRECCIÓN 7.º ERROR (No inventar criptografía 2): el token de sesión ya no
             // se muestra por pantalla.
         }
 
         private static void PanelAdministracion()
         {
-            // CORRECCIÓN (Privilegio mínimo / Fallar de forma segura): se
+            // CORRECCIÓN 1.er ERROR (Privilegio mínimo) y 5.º ERROR (Fallar de forma segura): se
             // comprueba que el usuario es administrador justo antes de mostrar
             // los datos, no solo al dibujar el menú. Si no lo es, se deniega.
             if (!EsAdmin())
