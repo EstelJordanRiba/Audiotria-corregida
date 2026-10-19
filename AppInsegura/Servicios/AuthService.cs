@@ -25,22 +25,22 @@ namespace AppInsegura.Servicios
         //          son "jugador", que es el mínimo de permisos necesario.
         // Ver también: PanelAdministracion() en Program.cs.
         // ----------------------------------------------------------------------
-        public Usuario Registrar(string nombre, string contrasena)
+        public Usuario Registrar(string nombre, string contrasena)  // Solución del error 1
         {
-            return RegistrarConRol(nombre, contrasena, "jugador");
+            return RegistrarConRol(nombre, contrasena, "jugador");  // Solución del error 1
         }
 
         // RegistrarConRol es "internal": no es público, solo se puede usar desde
         // dentro del propio programa. Solo lo usa CargarUsuariosDeEjemplo() en
         // Program.cs para las cuentas de prueba (#if DEBUG – 4.º error).
-        internal Usuario RegistrarConRol(string nombre, string contrasena, string rol)
+        internal Usuario RegistrarConRol(string nombre, string contrasena, string rol)  // Solución del error 1
         {
             var nuevo = new Usuario
             {
                 Nombre = nombre,
                 // La contraseña NO se guarda: se guarda su hash con una sal
                 // aleatoria nueva de 16 bytes (6.º error – ver CalcularHash).
-                ContrasenaHash = CalcularHash(contrasena, RandomNumberGenerator.GetBytes(16)),
+                ContrasenaHash = CalcularHash(contrasena, RandomNumberGenerator.GetBytes(16)),  // Solución del error 6
                 Rol = rol,
                 TokenSesion = ""
             };
@@ -68,11 +68,11 @@ namespace AppInsegura.Servicios
             //      adivinando el hash poco a poco. Así no puede.
             // Ver también: CalcularHash() (más abajo).
             // ------------------------------------------------------------------
-            byte[] sal = Convert.FromBase64String(usuario.ContrasenaHash.Split(':')[0]);
-            string hashIntento = CalcularHash(contrasena, sal);
-            if (!CryptographicOperations.FixedTimeEquals(
-                    Encoding.UTF8.GetBytes(usuario.ContrasenaHash),
-                    Encoding.UTF8.GetBytes(hashIntento)))
+            byte[] sal = Convert.FromBase64String(usuario.ContrasenaHash.Split(':')[0]);  // Solución del error 6
+            string hashIntento = CalcularHash(contrasena, sal);  // Solución del error 6
+            if (!CryptographicOperations.FixedTimeEquals(  // Solución del error 6
+                    Encoding.UTF8.GetBytes(usuario.ContrasenaHash),  // Solución del error 6
+                    Encoding.UTF8.GetBytes(hashIntento)))  // Solución del error 6
             {
                 return null;
             }
@@ -92,10 +92,10 @@ namespace AppInsegura.Servicios
             //              VerPerfil() en Program.cs.
             // ------------------------------------------------------------------
             string token = GenerarTokenSesion();
-            usuario.TokenSesion = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
+            usuario.TokenSesion = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));  // Solución del error 7
 
             // El log solo muestra el nombre, ningún dato secreto.
-            Console.WriteLine($"[LOG] Login correcto -> usuario: {usuario.Nombre}");
+            Console.WriteLine($"[LOG] Login correcto -> usuario: {usuario.Nombre}");  // Solución del error 7
 
             GuardarSesionEnDisco(usuario);
 
@@ -120,10 +120,10 @@ namespace AppInsegura.Servicios
         // Se guarda como "sal:hash" (en Base64) para poder recuperar la sal al
         // iniciar sesión.
         // ----------------------------------------------------------------------
-        private string CalcularHash(string contrasena, byte[] sal)
+        private string CalcularHash(string contrasena, byte[] sal)  // Solución del error 6
         {
-            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(contrasena, sal, 600_000, HashAlgorithmName.SHA256, 32);
-            return $"{Convert.ToBase64String(sal)}:{Convert.ToBase64String(hash)}";
+            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(contrasena, sal, 600_000, HashAlgorithmName.SHA256, 32);  // Solución del error 6
+            return $"{Convert.ToBase64String(sal)}:{Convert.ToBase64String(hash)}";  // Solución del error 6
         }
 
         // ----------------------------------------------------------------------
@@ -137,7 +137,7 @@ namespace AppInsegura.Servicios
         // ----------------------------------------------------------------------
         private string GenerarTokenSesion()
         {
-            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));  // Solución del error 7
         }
 
         // ----------------------------------------------------------------------
