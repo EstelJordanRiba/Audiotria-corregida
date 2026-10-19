@@ -27,7 +27,7 @@ namespace AppInsegura.Datos
             return usuarios.FirstOrDefault(u => u.Nombre == nombre);
         }
 
-        // CORRECCIÓN (No confiar en la entrada): antes el nombre se añadía
+        // CORRECCIÓN 2.º ERROR (No confiar en la entrada): antes el nombre se añadía
         // directamente a la consulta y con ' OR '1'='1 se mostraba el primer
         // usuario. Ahora la entrada se trata como un dato y no como parte de la
         // consulta: se valida con una lista blanca (solo letras, números y _,
